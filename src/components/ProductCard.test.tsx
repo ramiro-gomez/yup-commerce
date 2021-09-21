@@ -2,18 +2,24 @@ import { render, screen } from '@testing-library/react';
 import ProductCard from './ProductCard';
 
 describe('<ProductCard />', () => {
-	it('renders the givens name, category and price', () => {
+	it('renders the given productData and cardBottom', () => {
 		const productData = {
 			name: 'T-Shirt',
 			category: 'Clothes',
 			price: 10,
 		};
-		render(<ProductCard productData={productData} />);
-		const $name = screen.getByText(new RegExp(productData.name));
-		const $category = screen.getByText(new RegExp(productData.category));
-		const $price = screen.getByText(new RegExp(`${productData.price.toString()}$`));
+		const nameRegExp = new RegExp(productData.name, 'i');
+		const categoryRegExp = new RegExp(productData.category, 'i');
+		const priceRegExp = new RegExp(productData.price.toString());
+		const cardBottomText = 'Testing card';
+
+		render(<ProductCard productData={productData} cardBottom={(<div>{cardBottomText}</div>)} />);
+		const $name = screen.getByRole('heading', { name: nameRegExp });
+		const $category = screen.getByRole('heading', { name: categoryRegExp });
+		const $price = screen.getByRole('heading', { name: priceRegExp });
 		expect($name).toBeInTheDocument();
 		expect($category).toBeInTheDocument();
 		expect($price).toBeInTheDocument();
+		expect(screen.getByText(cardBottomText)).toBeInTheDocument();
 	});
 });

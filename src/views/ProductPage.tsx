@@ -1,8 +1,9 @@
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import ProductCard from '../components/ProductCard';
 import NavBar from '../components/NavBar';
+import ProductCard from '../components/ProductCard';
+import CardQuantity from '../components/CardQuantity';
 
 const products = [
 	{
@@ -57,7 +58,16 @@ const ProductPage = () => {
 						if (productData.name.toLowerCase().includes(searchText.toLowerCase())) {
 							return (
 								<Col xs="12" lg="4" key={`col-${i}`}>
-									<ProductCard productData={productData} key={`product-${i}`} />
+									<ProductCard
+										key={`product-${i}`}
+										productData={productData}
+										cardBottom={(
+											<div className="d-flex mx-auto">
+												<CardQuantity />
+												<Button className="fm-body fs-5 fs-lg-3 fw-semibold border-start-0 rounded-start-0" variant="outline-primary">Add to cart</Button>
+											</div>
+										)}
+									/>
 								</Col>
 							);
 						}

@@ -3,8 +3,10 @@ import userEvent from '@testing-library/user-event';
 import ProductPage from './ProductPage';
 
 describe('<ProductPage />', () => {
-	it('renders a search bar and hides the cards that doesn\'t match with the text typed in the search bar', () => {
+	beforeEach(() => {
 		render(<ProductPage />);
+	});
+	it('renders a search bar and hides the cards that doesn\'t match with the text typed in the search bar', () => {
 		const $searchBar = screen.getByPlaceholderText(/search/i);
 		const $shirtCards = screen.getAllByText(/shirt/i);
 		const $laptopCards = screen.getAllByText(/laptop/i);
