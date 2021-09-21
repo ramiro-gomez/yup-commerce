@@ -13,6 +13,9 @@ $gray: hsl(229, 9%, 46%);
 $gray-40: hsla(229, 9%, 46%, 40%);
 $black: hsl(165, 14%, 11%);
 
+$body-bg: $white;
+$body-color: $black;
+
 $font-family-base: $fm-body, sans-serif;
 $font-sizes: (
 	1: $fs-1,
@@ -41,6 +44,11 @@ $card-border-width: 1px;
 $card-border-color: $gray-40;
 $card-border-radius: 0.5rem;
 $card-box-shadow: $shadow-md;
+
+$input-btn-padding-y: 0.5rem;
+$input-btn-padding-x: 1rem;
+$input-btn-focus-color: transparent;
+$input-btn-focus-box-shadow: $shadow-sm;
 
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -81,6 +89,19 @@ $utilities: (
 		class: fs,
 		values: $font-sizes,
 	),
+	"width":
+		map-merge(
+			map-get($utilities, "width"),
+			(
+				values:
+					map-merge(
+						map-get(map-get($utilities, "width"), "values"),
+						(
+							"max-content": max-content,
+						)
+					),
+			)
+		),
 	"grid-auto-flow": (
 		property: grid-auto-flow,
 		class: "auto-flow",
@@ -187,8 +208,14 @@ input:focus {
 .nav-logo {
 	height: 2.25rem;
 }
+.sign-logo {
+	height: 2.5rem;
+}
 .card-quantity-box {
 	width: 2rem;
+}
+.sign-form {
+	max-width: 32rem;
 }
 
 @include media-breakpoint-up(lg) {
@@ -200,6 +227,9 @@ input:focus {
 		padding: 0.75rem 1.5rem;
 	}
 	.nav-logo {
-		height: 50px;
+		height: 3.125rem;
+	}
+	.sign-logo {
+		height: 3.75rem;
 	}
 }

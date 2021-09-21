@@ -14,10 +14,10 @@ const NavBar: FC = () => (
 				<Navbar.Collapse id="basic-navbar-nav" className="ms-auto">
 					<Nav className="ms-auto py-3 py-lg-0 d-grid gap-3 auto-flow-lg-column">
 						<Link to="/signin">
-							<Button variant="outline-primary">Sign in</Button>
+							<Button className="w-100" variant="outline-primary">Sign in</Button>
 						</Link>
-						<Link to="signup">
-							<Button variant="primary">Sign up</Button>
+						<Link to="/signup">
+							<Button className="w-100" variant="primary">Sign up</Button>
 						</Link>
 					</Nav>
 				</Navbar.Collapse>

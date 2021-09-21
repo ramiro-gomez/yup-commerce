@@ -6,9 +6,13 @@ describe('<App />', () => {
 	it('redirects to different pages by clicking on their respective links', () => {
 		render(<App />);
 		expect(window.location.hash).toBe('#/');
-		userEvent.click(screen.getByText(/sign in/i));
+		userEvent.click(screen.getByRole('link', { name: /sign in/i }));
 		expect(window.location.hash).toBe('#/signin');
-		userEvent.click(screen.getByAltText(/logo/i));
+		userEvent.click(screen.getByRole('link', { name: /logo/i }));
+		expect(window.location.hash).toBe('#/');
+		userEvent.click(screen.getByRole('link', { name: /sign up/i }));
+		expect(window.location.hash).toBe('#/signup');
+		userEvent.click(screen.getByRole('link', { name: /logo/i }));
 		expect(window.location.hash).toBe('#/');
 	});
 });

@@ -2,10 +2,12 @@ import { render, screen } from '@testing-library/react';
 import NavBar from './NavBar';
 
 describe('<NavBar />', () => {
-	it('renders sign in, sign up links', () => {
+	it('renders logo, sign in and sign up links', () => {
 		render(<NavBar />);
-		const $signInLink = screen.getByText(/sign in/i);
-		const $signUpLink = screen.getByText(/sign up/i);
+		const $logoLink = screen.getByRole('link', { name: /logo/i });
+		const $signInLink = screen.getByRole('link', { name: /sign in/i });
+		const $signUpLink = screen.getByRole('link', { name: /sign up/i });
+		expect($logoLink).toBeInTheDocument();
 		expect($signInLink).toBeInTheDocument();
 		expect($signUpLink).toBeInTheDocument();
 	});
