@@ -1,45 +1,27 @@
 import { Col, Row, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import ProductCard from '../components/ProductCard';
 import CardQuantity from '../components/CardQuantity';
+import { getProducts } from '../firebase/handler';
 
-const products = [
-	{
-		name: 'T-Shirt',
-		category: 'Clothes',
-		price: 10,
-	},
-	{
-		name: 'T-Shirt',
-		category: 'Clothes',
-		price: 10,
-	},
-	{
-		name: 'T-Shirt',
-		category: 'Clothes',
-		price: 10,
-	},
-	{
-		name: 'Laptop',
-		category: 'Technology',
-		price: 100,
-	},
-	{
-		name: 'Laptop',
-		category: 'Technology',
-		price: 100,
-	},
-	{
-		name: 'Laptop',
-		category: 'Technology',
-		price: 100,
-	},
-];
+interface Product {
+	name: string,
+	category: string,
+	price: number
+}
 
 const ProductPage = () => {
 	const [searchText, setSearchText] = useState('');
+	const [products, setProducts] = useState<Product[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			setProducts(await getProducts());
+		})();
+	}, []);
+
 	return (
 		<>
 			<NavBar />
