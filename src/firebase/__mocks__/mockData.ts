@@ -1,4 +1,4 @@
-export default [
+export const mockProducts = [
 	{
 		name: 'Testing T-Shirt',
 		category: 'Testing Clothes',
@@ -15,3 +15,11 @@ export default [
 		price: 54545454,
 	},
 ];
+
+export const mockAlreadyRegisterd = {
+	email: 'testing-emailg@email.test',
+	username: 'testing_taken0',
+};
+export const mockUserData = {
+	userid: 'exampleuserid',
+};

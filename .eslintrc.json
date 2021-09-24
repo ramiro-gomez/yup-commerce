@@ -36,6 +36,7 @@
 		"react/react-in-jsx-scope": "off",
 		"react/prefer-stateless-function": "off",
 		"react/prop-types": "off",
-		"react/no-array-index-key": "off"
+		"react/no-array-index-key": "off",
+		"no-throw-literal": "off"
 	}
 }

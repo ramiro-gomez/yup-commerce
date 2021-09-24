@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProductPage from './ProductPage';
-import mockProducts from '../firebase/__mocks__/mockData';
+import { mockProducts } from '../firebase/__mocks__/mockData';
 import { getProducts } from '../firebase/handler';
 
 jest.mock('../firebase/handler');
