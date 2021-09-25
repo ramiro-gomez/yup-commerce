@@ -1,14 +1,14 @@
 import {
-	collection, doc, getDoc, getDocs, setDoc,
+	collection, doc, getDoc, getDocs, query, setDoc, where,
 } from '@firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from './config';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
+export const auth = getAuth();
 
 interface Product {
 	name: string,
@@ -20,26 +20,40 @@ export const getProducts = async () => {
 	try {
 		const productSnaps = await getDocs(collection(db, 'products'));
 		return productSnaps.docs.map((productSnap) => productSnap.data() as Product);
-	} catch (e) {
-		console.log(e);
+	} catch (error) {
+		console.log(error);
 	}
 	return [];
 };
 
-export const getUsernameData = async (username: string) => {
+export const getUserDataUsingUsername = async (username: string) => {
+	const usersRef = collection(db, 'users');
+	const usernameQuery = query(usersRef, where('username', '==', username));
 	try {
-		const docSnap = await getDoc(doc(db, 'usernames', username));
-		if (docSnap.exists()) return docSnap.data();
-	} catch (e) {
-		console.log(e);
+		const userSnaps = await getDocs(usernameQuery);
+		if (userSnaps.docs[0]) return userSnaps.docs[0].data();
+	} catch (error) {
+		console.log(error);
 	}
 	return null;
 };
 
+export const getAssociatedUsername = async (uid: string) => {
+	const userSnap = await getDoc(doc(db, 'users', uid));
+	if (userSnap.exists()) {
+		const user = userSnap.data();
+		return user.username;
+	}
+	return '';
+};
+
 export const signUpUser = async (email: string, username: string, password: string) => {
 	const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-	await setDoc(doc(db, 'usernames', username), {
-		userid: userCredential.user.uid,
-		email,
+	await setDoc(doc(db, 'users', userCredential.user.uid), {
+		username,
 	});
+};
+
+export const signInUser = async (email:string, password: string) => {
+	await signInWithEmailAndPassword(auth, email, password);
 };

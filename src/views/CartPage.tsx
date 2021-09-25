@@ -1,5 +1,7 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { User } from '@firebase/auth';
+import { FC } from 'react';
 import NavBar from '../components/NavBar';
 import ProductCard from '../components/ProductCard';
 import CardQuantity from '../components/CardQuantity';
@@ -37,9 +39,13 @@ const products = [
 	},
 ];
 
-const CartPage = () => (
+interface Props {
+	currentUser: null|User
+}
+
+const CartPage: FC<Props> = ({ currentUser }) => (
 	<>
-		<NavBar />
+		<NavBar currentUser={currentUser} />
 		<div className="custom-container">
 			<section className="py-3 px-4 my-4 rounded-2 shadow-lg">
 				<div className="d-flex mb-4">

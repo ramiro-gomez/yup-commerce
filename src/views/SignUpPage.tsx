@@ -2,7 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { HashRouter, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
-import { getUsernameData, signUpUser } from '../firebase/handler';
+import { getUserDataUsingUsername, signUpUser } from '../firebase/handler';
 
 interface AlreadyRegistered {
 	email: string | null,
@@ -20,7 +20,7 @@ const SignUpPage = () => {
 		username: null,
 	});
 	const [showInvalidFields, setShowInvalidFields] = useState(false);
-	const [disableSignUpButton, setDisableSignUpButton] = useState(false);
+	const [disableSubmitButton, setDisableSubmitButton] = useState(false);
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setSignupForm({
@@ -31,14 +31,14 @@ const SignUpPage = () => {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const form = e.currentTarget;
-		const { email, username, password } = signupForm;
 		if (!form.checkValidity()) {
 			setShowInvalidFields(true);
 			return;
 		}
+		setDisableSubmitButton(true);
+		const { email, username, password } = signupForm;
 		try {
-			setDisableSignUpButton(true);
-			const usernameExists = await getUsernameData(username);
+			const usernameExists = await getUserDataUsingUsername(username);
 			if (usernameExists) {
 				setAlreadyRegistered({
 					...alreadyRegistered,
@@ -47,7 +47,6 @@ const SignUpPage = () => {
 				setShowInvalidFields(true);
 			} else {
 				await signUpUser(email, username, password);
-				window.location.hash = '#/';
 			}
 		} catch (error: any) {
 			if (error.code === 'auth/email-already-in-use') {
@@ -57,11 +56,10 @@ const SignUpPage = () => {
 				});
 				setShowInvalidFields(true);
 			} else {
-				// eslint-disable-next-line no-console
 				console.log(error);
 			}
 		}
-		setDisableSignUpButton(false);
+		setDisableSubmitButton(false);
 	};
 
 	return (
@@ -72,7 +70,7 @@ const SignUpPage = () => {
 				</Link>
 			</HashRouter>
 			<div className="custom-container">
-				<Form className="sign-form mx-auto p-4 rounded-2 shadow-lg" noValidate validated={showInvalidFields} name="form" onSubmit={handleSubmit}>
+				<Form className="sign-form mx-auto p-4 rounded-2 shadow-lg" noValidate validated={showInvalidFields} onSubmit={handleSubmit}>
 					<Form.Group className="mb-3" controlId="emailInput">
 						<Form.Label className="fw-semibold fs-lg-2">Email</Form.Label>
 						<Form.Control
@@ -124,7 +122,7 @@ const SignUpPage = () => {
 							*Must contain at least 8 characters, numbers, lowercase and uppercase letters
 						</Form.Control.Feedback>
 					</Form.Group>
-					<Button className="w-100 fs-3" disabled={disableSignUpButton} variant="primary" type="submit">Sign up</Button>
+					<Button className="w-100 fs-3" disabled={disableSubmitButton} variant="primary" type="submit">Sign up</Button>
 				</Form>
 			</div>
 		</>

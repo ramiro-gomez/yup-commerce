@@ -1,4 +1,4 @@
-export const mockProducts = [
+export const products = [
 	{
 		name: 'Testing T-Shirt',
 		category: 'Testing Clothes',
@@ -15,11 +15,21 @@ export const mockProducts = [
 		price: 54545454,
 	},
 ];
-
-export const mockAlreadyRegisterd = {
+export const userData = {
+	email: 'stored-email@testemail.test',
+	username: 'stored_username',
+};
+export const alreadyRegistered = {
 	email: 'testing-emailg@email.test',
-	username: 'testing_taken0',
+	username: 'testing_registered0',
 };
-export const mockUserData = {
-	userid: 'exampleuserid',
+export const notRegistered = {
+	email: 'not-registeredg@email.test',
+	username: 'testing-not-registered',
 };
+export const valid = {
+	email: 'er@er.er',
+	username: 'er',
+	password: 'Er345678',
+};
+export const invalidEmail = 'a@d';

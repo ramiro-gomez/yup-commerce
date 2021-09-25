@@ -1,15 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SignUpPage from './SignUpPage';
-import { signUpUser, getUsernameData } from '../firebase/handler';
-import { mockAlreadyRegisterd } from '../firebase/__mocks__/mockData';
+import { signUpUser, getUserDataUsingUsername } from '../firebase/handler';
+import { alreadyRegistered, valid } from '../firebase/__mocks__/mockData';
 
 jest.mock('../firebase/handler');
 
 describe('<SignUpPage />', () => {
-	const validEmail = 'a@b.cc';
-	const validUsername = 'ab';
-	const validPassowrd = 'Ab345678';
 	beforeEach(() => {
 		render(<SignUpPage />);
 	});
@@ -63,12 +60,12 @@ describe('<SignUpPage />', () => {
 		const $usernameInput = screen.getByRole('textbox', { name: /username/i }) as HTMLInputElement;
 		const $passwordInput = screen.getByPlaceholderText(/password/i) as HTMLInputElement;
 		const $signUpButton = screen.getByRole('button', { name: /sign up/i });
-		userEvent.type($emailInput, validEmail);
-		userEvent.type($usernameInput, mockAlreadyRegisterd.username);
-		userEvent.type($passwordInput, validPassowrd);
+		userEvent.type($emailInput, valid.email);
+		userEvent.type($usernameInput, alreadyRegistered.username);
+		userEvent.type($passwordInput, valid.password);
 		expect($usernameInput.reportValidity()).toBeTruthy();
 		userEvent.click($signUpButton);
-		await waitFor(() => getUsernameData(''));
+		await waitFor(() => getUserDataUsingUsername(''));
 		expect($usernameInput.reportValidity()).toBeFalsy();
 	});
 	it('invalidates the email if is already registered (all fields must be valid and the username must not exist) ', async () => {
@@ -76,12 +73,12 @@ describe('<SignUpPage />', () => {
 		const $usernameInput = screen.getByRole('textbox', { name: /username/i }) as HTMLInputElement;
 		const $passwordInput = screen.getByPlaceholderText(/password/i) as HTMLInputElement;
 		const $signUpButton = screen.getByRole('button', { name: /sign up/i });
-		userEvent.type($emailInput, mockAlreadyRegisterd.email);
-		userEvent.type($usernameInput, validUsername);
-		userEvent.type($passwordInput, validPassowrd);
+		userEvent.type($emailInput, alreadyRegistered.email);
+		userEvent.type($usernameInput, valid.username);
+		userEvent.type($passwordInput, valid.password);
 		expect($emailInput.reportValidity()).toBeTruthy();
 		userEvent.click($signUpButton);
-		await waitFor(() => getUsernameData(''));
+		await waitFor(() => getUserDataUsingUsername(''));
 		await waitFor(() => signUpUser('', '', ''));
 		expect($emailInput.reportValidity()).toBeFalsy();
 	});
@@ -90,9 +87,9 @@ describe('<SignUpPage />', () => {
 		const $usernameInput = screen.getByRole('textbox', { name: /username/i }) as HTMLInputElement;
 		const $passwordInput = screen.getByPlaceholderText(/password/i) as HTMLInputElement;
 		const $signUpButton = screen.getByRole('button', { name: /sign up/i });
-		userEvent.type($emailInput, validEmail);
-		userEvent.type($usernameInput, validUsername);
-		userEvent.type($passwordInput, validPassowrd);
+		userEvent.type($emailInput, valid.email);
+		userEvent.type($usernameInput, valid.username);
+		userEvent.type($passwordInput, valid.password);
 		expect($signUpButton).toBeEnabled();
 		userEvent.click($signUpButton);
 		expect($signUpButton).toBeDisabled();
@@ -101,20 +98,5 @@ describe('<SignUpPage />', () => {
 		userEvent.click($signUpButton);
 		await waitFor(() => signUpUser('', '', ''));
 		expect($signUpButton).toBeEnabled();
-	});
-	it('sign up a new user with email and password and then, if the sign up is successfull, redirects to product page', async () => {
-		window.location.hash = '#/signup';
-		expect(window.location.hash).toBe('#/signup');
-		const $emailInput = screen.getByRole('textbox', { name: /email/i }) as HTMLInputElement;
-		const $usernameInput = screen.getByRole('textbox', { name: /username/i }) as HTMLInputElement;
-		const $passwordInput = screen.getByPlaceholderText(/password/i) as HTMLInputElement;
-		const $signUpButton = screen.getByRole('button', { name: /sign up/i });
-		userEvent.type($emailInput, validEmail);
-		userEvent.type($usernameInput, validUsername);
-		userEvent.type($passwordInput, validPassowrd);
-		userEvent.click($signUpButton);
-		await waitFor(() => getUsernameData(''));
-		await waitFor(() => signUpUser('', '', ''));
-		expect(window.location.hash).toBe('#/');
 	});
 });
