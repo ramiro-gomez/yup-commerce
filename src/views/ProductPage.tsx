@@ -2,18 +2,24 @@ import { Col, Row } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useState, useEffect, FC } from 'react';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../firebase/handler';
 import ProductCardBottom from '../components/ProductCardBottom';
-import { Product } from '../interfaces';
+import { useAppDispatch, useAppSelector } from '../store/store';
+import { fetchProducts } from '../store/reducers/productsReducer';
+import { YupUser } from '../interfaces';
 
-const ProductPage: FC = () => {
+interface Props {
+	currentUser: null|YupUser,
+}
+
+const ProductPage: FC<Props> = ({ currentUser }) => {
 	const [searchText, setSearchText] = useState('');
-	const [products, setProducts] = useState<Product[]>([]);
+	const products = useAppSelector((state) => state.products);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		(async () => {
-			setProducts(await getProducts());
-		})();
+		if (!products.length) {
+			dispatch(fetchProducts());
+		}
 	}, []);
 
 	return (
@@ -35,7 +41,7 @@ const ProductPage: FC = () => {
 								<Col xs="12" lg="4" key={`col-${product.id}`}>
 									<ProductCard
 										product={product}
-										cardBottom={<ProductCardBottom product={product} />}
+										cardBottom={<ProductCardBottom product={product} currentUser={currentUser} />}
 									/>
 								</Col>
 							);

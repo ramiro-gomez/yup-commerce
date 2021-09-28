@@ -4,8 +4,6 @@ import SignUpPage from './SignUpPage';
 import { signUpUser, getUserDataUsingUsername } from '../firebase/handler';
 import { alreadyRegistered, valid } from '../firebase/__mocks__/mockData';
 
-jest.mock('../firebase/handler');
-
 describe('<SignUpPage />', () => {
 	beforeEach(() => {
 		render(<SignUpPage />);

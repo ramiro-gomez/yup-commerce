@@ -5,8 +5,6 @@ import {
 } from '../firebase/__mocks__/mockData';
 import SignInPage from './SignInPage';
 
-jest.mock('../firebase/handler.ts');
-
 describe('<SignInPage />', () => {
 	beforeEach(() => {
 		render(<SignInPage />);

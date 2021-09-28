@@ -44,7 +44,7 @@ const App = () => {
 				<Switch>
 					<Route path="/" exact>
 						<NavBar currentUser={currentUser} />
-						<ProductPage />
+						<ProductPage currentUser={currentUser} />
 					</Route>
 					<Route path="/cart" exact>
 						{currentUser ? (

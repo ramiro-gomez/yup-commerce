@@ -1,14 +1,18 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
 import ProductPage from './ProductPage';
 import { products } from '../firebase/__mocks__/mockData';
 import { getProducts } from '../firebase/handler';
-
-jest.mock('../firebase/handler');
+import store from '../store/store';
 
 describe('<ProductPage />', () => {
 	beforeEach(async () => {
-		render(<ProductPage />);
+		render(
+			<Provider store={store}>
+				<ProductPage currentUser={null} />
+			</Provider>,
+		);
 		await waitFor(() => getProducts());
 	});
 	it('renders product cards', async () => {

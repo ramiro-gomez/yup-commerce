@@ -11,10 +11,10 @@ $primary: hsl(11, 98%, 59%);
 $white: hsl(0, 0%, 99%);
 $gray: hsl(229, 9%, 46%);
 $gray-40: hsla(229, 9%, 46%, 40%);
-$black: hsl(165, 14%, 11%);
+$light-black: hsl(165, 14%, 11%);
 
 $body-bg: $white;
-$body-color: $black;
+$body-color: $light-black;
 
 $font-family-base: $fm-body, sans-serif;
 $font-sizes: (
