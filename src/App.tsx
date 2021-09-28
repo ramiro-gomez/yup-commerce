@@ -2,17 +2,15 @@ import {
 	HashRouter, Switch, Route, Redirect,
 } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from '@firebase/auth';
+import { onAuthStateChanged } from '@firebase/auth';
 import { Spinner } from 'react-bootstrap';
 import ProductPage from './views/ProductPage';
 import SignUpPage from './views/SignUpPage';
 import SignInPage from './views/SignInPage';
 import CartPage from './views/CartPage';
 import { auth, getAssociatedUsername } from './firebase/handler';
-
-interface YupUser extends User {
-	username: string
-}
+import NavBar from './components/NavBar';
+import { YupUser } from './interfaces';
 
 const App = () => {
 	const [currentUser, setCurrentUser] = useState<null|YupUser>(null);
@@ -45,10 +43,16 @@ const App = () => {
 			) : (
 				<Switch>
 					<Route path="/" exact>
-						<ProductPage currentUser={currentUser} />
+						<NavBar currentUser={currentUser} />
+						<ProductPage />
 					</Route>
 					<Route path="/cart" exact>
-						{currentUser ? <CartPage currentUser={currentUser} /> : <Redirect to="/signin" />}
+						{currentUser ? (
+							<>
+								<NavBar currentUser={currentUser} />
+								<CartPage />
+							</>
+						) : <Redirect to="/signin" />}
 					</Route>
 					<Route path="/signin" exact>
 						{currentUser ? <Redirect to="/" /> : <SignInPage />}

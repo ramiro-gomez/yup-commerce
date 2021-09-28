@@ -4,6 +4,7 @@ import ProductCard from './ProductCard';
 describe('<ProductCard />', () => {
 	it('renders the given productData and cardBottom', () => {
 		const productData = {
+			id: '1',
 			name: 'T-Shirt',
 			category: 'Clothes',
 			price: 10,
@@ -13,7 +14,7 @@ describe('<ProductCard />', () => {
 		const priceRegExp = new RegExp(productData.price.toString());
 		const cardBottomText = 'Testing card';
 
-		render(<ProductCard productData={productData} cardBottom={(<div>{cardBottomText}</div>)} />);
+		render(<ProductCard product={productData} cardBottom={(<div>{cardBottomText}</div>)} />);
 		const $name = screen.getByRole('heading', { name: nameRegExp });
 		const $category = screen.getByRole('heading', { name: categoryRegExp });
 		const $price = screen.getByRole('heading', { name: priceRegExp });

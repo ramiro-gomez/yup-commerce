@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-	alreadyRegistered, invalidEmail, notRegistered, valid,
+	invalidEmail, notRegistered, valid,
 } from '../firebase/__mocks__/mockData';
 import SignInPage from './SignInPage';
 

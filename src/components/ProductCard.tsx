@@ -1,15 +1,12 @@
 import { FC, ReactNode } from 'react';
 import { Card } from 'react-bootstrap';
+import { Product } from '../interfaces';
 
 interface Props {
-	productData: {
-		name: string,
-		category: string,
-		price: number
-	},
+	product: Product,
 	cardBottom: ReactNode
 }
-const ProductCard: FC<Props> = ({ productData: { name, price, category }, cardBottom }) => (
+const ProductCard: FC<Props> = ({ product: { name, price, category }, cardBottom }) => (
 	<Card className="shadow-md">
 		<Card.Body className="d-flex flex-column py-lg-4">
 			<div className="w-100 mb-3 mb-lg-4">

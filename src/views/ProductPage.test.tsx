@@ -8,7 +8,7 @@ jest.mock('../firebase/handler');
 
 describe('<ProductPage />', () => {
 	beforeEach(async () => {
-		render(<ProductPage currentUser={null} />);
+		render(<ProductPage />);
 		await waitFor(() => getProducts());
 	});
 	it('renders product cards', async () => {

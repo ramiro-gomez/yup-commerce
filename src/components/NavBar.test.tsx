@@ -3,7 +3,7 @@ import NavBar from './NavBar';
 
 describe('<NavBar />', () => {
 	it('renders logo, sign in and sign up links', () => {
-		render(<NavBar />);
+		render(<NavBar currentUser={null} />);
 		const $logoLink = screen.getByRole('link', { name: /logo/i });
 		const $signInLink = screen.getByRole('link', { name: /sign in/i });
 		const $signUpLink = screen.getByRole('link', { name: /sign up/i });

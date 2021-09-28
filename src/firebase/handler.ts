@@ -5,16 +5,11 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from './config';
+import { Product } from '../interfaces';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth = getAuth();
-
-interface Product {
-	name: string,
-	category: string,
-	price: number
-}
 
 export const getProducts = async () => {
 	try {

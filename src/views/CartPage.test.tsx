@@ -3,7 +3,7 @@ import CartPage from './CartPage';
 
 describe('<CartPage />', () => {
 	beforeEach(() => {
-		render(<CartPage currentUser={null} />);
+		render(<CartPage />);
 	});
 	it('renders a total price and a buy button', () => {
 		const $totalPrice = screen.getByText(/total:/i);

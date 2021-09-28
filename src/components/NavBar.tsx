@@ -5,6 +5,7 @@ import { Button, Nav, Navbar } from 'react-bootstrap';
 import { HashRouter, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import { auth } from '../firebase/handler';
+import { useAppSelector } from '../store/store';
 
 interface Props {
 	currentUser: null|User
@@ -12,6 +13,10 @@ interface Props {
 
 const NavBar: FC<Props> = ({ currentUser }) => {
 	const [disableSignOutBtn, setDisableSignOutBtn] = useState(false);
+	const cartItems = useAppSelector((state) => state.cart);
+	const totalProducts = cartItems.reduce(
+		(acc, cartProduct) => acc + cartProduct.quantity, 0,
+	);
 
 	const signOutUser = async () => {
 		setDisableSignOutBtn(true);
@@ -34,7 +39,11 @@ const NavBar: FC<Props> = ({ currentUser }) => {
 						<>
 							<Link to="/cart" className="d-flex align-items-center text-decoration-none">
 								<Icon className="nav-cart-icon text-primary me-2" icon="bytesize:cart" />
-								<p className="text-primary fs-3 fs-lg-1">(10)</p>
+								<p className="text-primary fs-3 fs-lg-1">
+									(
+									{totalProducts}
+									)
+								</p>
 							</Link>
 							<Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-2" />
 							<Navbar.Collapse id="basic-navbar-nav" className="ms-2 flex-grow-0">
