@@ -9,7 +9,6 @@ import SignUpPage from './views/SignUpPage';
 import SignInPage from './views/SignInPage';
 import CartPage from './views/CartPage';
 import { auth, getAssociatedUsername } from './firebase/handler';
-import NavBar from './components/NavBar';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setUser } from './store/reducers/userReducer';
 
@@ -42,16 +41,10 @@ const App = () => {
 			) : (
 				<Switch>
 					<Route path="/" exact>
-						<NavBar />
 						<ProductPage />
 					</Route>
 					<Route path="/cart" exact>
-						{user ? (
-							<>
-								<NavBar />
-								<CartPage />
-							</>
-						) : <Redirect to="/signin" />}
+						{user ? <CartPage /> : <Redirect to="/signin" />}
 					</Route>
 					<Route path="/signin" exact>
 						{user ? <Redirect to="/" /> : <SignInPage />}

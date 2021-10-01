@@ -6,6 +6,11 @@ $fs-3: 16px;
 $fs-4: 14px;
 $fs-5: 12px;
 
+$side-space: (
+	sm: 1rem,
+	lg: 2rem,
+);
+
 // Customizing Bootstrap
 $primary: hsl(11, 98%, 59%);
 $white: hsl(0, 0%, 99%);
@@ -189,7 +194,7 @@ input:focus {
 	font-family: $fm-body;
 }
 .custom-container {
-	@include make-container(1rem);
+	@include make-container(map-get($side-space, sm));
 }
 .btn-primary {
 	&,
@@ -227,7 +232,7 @@ input:focus {
 
 @include media-breakpoint-up(lg) {
 	.custom-container {
-		@include make-container(2rem);
+		@include make-container(map-get($side-space, lg));
 	}
 	.btn {
 		font-size: $fs-3;

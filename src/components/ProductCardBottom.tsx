@@ -6,10 +6,11 @@ import { useAppDispatch, useAppSelector } from '../store/store';
 import CardQuantity from './CardQuantity';
 
 interface Props {
-	product: Product
+	product: Product,
+	setShowAlert: (state: boolean) => void
 }
 
-const ProductCardBottom: FC<Props> = ({ product }) => {
+const ProductCardBottom: FC<Props> = ({ product, setShowAlert }) => {
 	const [quantity, setQuantity] = useState(1);
 	const user = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
@@ -20,7 +21,7 @@ const ProductCardBottom: FC<Props> = ({ product }) => {
 		if (user) {
 			dispatch(addToCart({ product, quantity }));
 		} else {
-			alert('You need to sign in before you can start adding products');
+			setShowAlert(true);
 		}
 	};
 

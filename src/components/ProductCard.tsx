@@ -7,7 +7,7 @@ interface Props {
 	cardBottom: ReactNode
 }
 const ProductCard: FC<Props> = ({ product: { name, price, category }, cardBottom }) => (
-	<Card className="shadow-md">
+	<Card className="shadow-md border-0">
 		<Card.Body className="d-flex flex-column py-lg-4">
 			<div className="w-100 mb-3 mb-lg-4">
 				<div className="d-flex flex-wrap mb-2">
