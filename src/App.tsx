@@ -10,22 +10,21 @@ import SignInPage from './views/SignInPage';
 import CartPage from './views/CartPage';
 import { auth, getAssociatedUsername } from './firebase/handler';
 import NavBar from './components/NavBar';
-import { YupUser } from './interfaces';
+import { useAppDispatch, useAppSelector } from './store/store';
+import { setUser } from './store/reducers/userReducer';
 
 const App = () => {
-	const [currentUser, setCurrentUser] = useState<null|YupUser>(null);
 	const [loadingUser, setLoadingUser] = useState(true);
+	const user = useAppSelector((state) => state.user);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		const unsuscribeAuthListener = onAuthStateChanged(auth, async (userAuth) => {
 			if (userAuth) {
 				const username = await getAssociatedUsername(userAuth.uid);
-				setCurrentUser({
-					...userAuth,
+				dispatch(setUser({
 					username,
-				});
-			} else {
-				setCurrentUser(null);
+				}));
 			}
 			setLoadingUser(false);
 		});
@@ -43,22 +42,22 @@ const App = () => {
 			) : (
 				<Switch>
 					<Route path="/" exact>
-						<NavBar currentUser={currentUser} />
-						<ProductPage currentUser={currentUser} />
+						<NavBar />
+						<ProductPage />
 					</Route>
 					<Route path="/cart" exact>
-						{currentUser ? (
+						{user ? (
 							<>
-								<NavBar currentUser={currentUser} />
+								<NavBar />
 								<CartPage />
 							</>
 						) : <Redirect to="/signin" />}
 					</Route>
 					<Route path="/signin" exact>
-						{currentUser ? <Redirect to="/" /> : <SignInPage />}
+						{user ? <Redirect to="/" /> : <SignInPage />}
 					</Route>
 					<Route path="/signup" exact>
-						{currentUser ? <Redirect to="/" /> : <SignUpPage />}
+						{user ? <Redirect to="/" /> : <SignUpPage />}
 					</Route>
 				</Switch>
 			)}

@@ -1,7 +1,9 @@
 import {
 	collection, doc, getDoc, getDocs, query, setDoc, where,
 } from '@firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+	getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from './config';
@@ -24,13 +26,13 @@ export const getProducts = async () => {
 export const getUserDataUsingUsername = async (username: string) => {
 	const usersRef = collection(db, 'users');
 	const usernameQuery = query(usersRef, where('username', '==', username));
-	try {
-		const userSnaps = await getDocs(usernameQuery);
-		if (userSnaps.docs[0]) return userSnaps.docs[0].data();
-	} catch (error) {
-		console.log(error);
+	const userSnaps = await getDocs(usernameQuery);
+	if (userSnaps.docs[0]) {
+		return userSnaps.docs[0].data();
 	}
-	return null;
+	throw {
+		code: 'yup-auth/username-not-found',
+	};
 };
 
 export const getAssociatedUsername = async (uid: string) => {

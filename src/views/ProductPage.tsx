@@ -5,13 +5,8 @@ import ProductCard from '../components/ProductCard';
 import ProductCardBottom from '../components/ProductCardBottom';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { fetchProducts } from '../store/reducers/productsReducer';
-import { YupUser } from '../interfaces';
 
-interface Props {
-	currentUser: null|YupUser,
-}
-
-const ProductPage: FC<Props> = ({ currentUser }) => {
+const ProductPage: FC = () => {
 	const [searchText, setSearchText] = useState('');
 	const products = useAppSelector((state) => state.products);
 	const dispatch = useAppDispatch();
@@ -41,7 +36,7 @@ const ProductPage: FC<Props> = ({ currentUser }) => {
 								<Col xs="12" lg="4" key={`col-${product.id}`}>
 									<ProductCard
 										product={product}
-										cardBottom={<ProductCardBottom product={product} currentUser={currentUser} />}
+										cardBottom={<ProductCardBottom product={product} />}
 									/>
 								</Col>
 							);

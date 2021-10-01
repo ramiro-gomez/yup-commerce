@@ -1,27 +1,27 @@
-import { signOut, User } from '@firebase/auth';
+import { signOut } from '@firebase/auth';
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
 import { Button, Nav, Navbar } from 'react-bootstrap';
 import { HashRouter, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import { auth } from '../firebase/handler';
-import { useAppSelector } from '../store/store';
+import { setUser } from '../store/reducers/userReducer';
+import { useAppDispatch, useAppSelector } from '../store/store';
 
-interface Props {
-	currentUser: null|User
-}
-
-const NavBar: FC<Props> = ({ currentUser }) => {
+const NavBar: FC = () => {
 	const [disableSignOutBtn, setDisableSignOutBtn] = useState(false);
 	const cartItems = useAppSelector((state) => state.cart);
 	const totalProducts = cartItems.reduce(
 		(acc, cartProduct) => acc + cartProduct.quantity, 0,
 	);
+	const user = useAppSelector((state) => state.user);
+	const dispatch = useAppDispatch();
 
 	const signOutUser = async () => {
 		setDisableSignOutBtn(true);
 		try {
 			await signOut(auth);
+			dispatch(setUser(null));
 		} catch (e) {
 			console.log(e);
 		}
@@ -35,7 +35,7 @@ const NavBar: FC<Props> = ({ currentUser }) => {
 					<Link className="me-auto" to="/">
 						<img className="nav-logo" src={logo} alt="logo" />
 					</Link>
-					{currentUser ? (
+					{user ? (
 						<>
 							<Link to="/cart" className="d-flex align-items-center text-decoration-none">
 								<Icon className="nav-cart-icon text-primary me-2" icon="bytesize:cart" />

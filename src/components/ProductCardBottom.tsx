@@ -1,23 +1,23 @@
 import { FC, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Product, YupUser } from '../interfaces';
+import { Product } from '../interfaces';
 import { addToCart } from '../store/reducers/cartReducer';
-import { useAppDispatch } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import CardQuantity from './CardQuantity';
 
 interface Props {
-	product: Product,
-	currentUser: null|YupUser
+	product: Product
 }
 
-const ProductCardBottom: FC<Props> = ({ product, currentUser }) => {
+const ProductCardBottom: FC<Props> = ({ product }) => {
 	const [quantity, setQuantity] = useState(1);
+	const user = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
 	const increment = () => setQuantity(quantity + 1);
 	const decrement = () => (quantity > 1) && setQuantity(quantity - 1);
 	const onAddToCart = () => {
-		if (currentUser) {
+		if (user) {
 			dispatch(addToCart({ product, quantity }));
 		} else {
 			alert('You need to sign in before you can start adding products');

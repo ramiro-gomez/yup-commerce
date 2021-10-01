@@ -29,10 +29,9 @@ describe('<ProductPage />', () => {
 		const $searchBar = screen.getByPlaceholderText(/search/i);
 		const product0NameRegExp = new RegExp(products[0].name, 'i');
 		const $product0 = screen.getAllByText(product0NameRegExp);
-		const $prodsWithDiffName = products.reduce((acc, { name }) => {
-			if (name.match(product0NameRegExp)) return acc;
-			return [...acc, ...screen.getAllByText(name)];
-		}, [] as HTMLElement[]);
+		const $prodsWithDiffName = products.reduce((acc, { name }) => (
+			name.match(product0NameRegExp) ? acc : [...acc, screen.getByText(name)]
+		), [] as HTMLElement[]);
 		$product0.forEach(($product) => expect($product).toBeVisible());
 		$prodsWithDiffName.forEach(($product) => expect($product).toBeVisible());
 		userEvent.type($searchBar, products[0].name);

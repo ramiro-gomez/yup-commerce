@@ -1,6 +1,4 @@
-import { User } from '@firebase/auth';
-
-export interface YupUser extends User {
+export interface YupUser {
 	username: string
 }
 

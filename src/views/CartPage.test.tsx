@@ -4,16 +4,18 @@ import store from '../store/store';
 import CartPage from './CartPage';
 
 describe('<CartPage />', () => {
+	let $totalPrice: HTMLElement;
+	let $buyButton: HTMLButtonElement;
 	beforeEach(() => {
 		render(
 			<Provider store={store}>
 				<CartPage />
 			</Provider>,
 		);
+		$totalPrice = screen.getByText(/total:/i);
+		$buyButton = screen.getByRole('button', { name: /purchase/i }) as HTMLButtonElement;
 	});
 	it('renders a total price and a buy button', () => {
-		const $totalPrice = screen.getByText(/total:/i);
-		const $buyButton = screen.getByRole('button', { name: /purchase/i });
 		expect($totalPrice).toBeInTheDocument();
 		expect($buyButton).toBeInTheDocument();
 	});
