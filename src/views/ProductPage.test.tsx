@@ -10,7 +10,7 @@ describe('<ProductPage />', () => {
 	beforeEach(async () => {
 		render(
 			<Provider store={store}>
-				<ProductPage currentUser={null} />
+				<ProductPage />
 			</Provider>,
 		);
 		await waitFor(() => getProducts());

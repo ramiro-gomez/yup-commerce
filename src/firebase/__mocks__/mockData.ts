@@ -19,20 +19,15 @@ export const products = [
 	},
 ];
 export const userData = {
-	email: 'stored-email@testemail.test',
-	username: 'stored_username',
+	firstName: 'ab',
+	lastName: 'cd',
 };
-export const alreadyRegistered = {
-	email: 'testing-emailg@email.test',
-	username: 'testing_registered0',
-};
-export const notRegistered = {
-	email: 'not-registeredg@email.test',
-	username: 'testing-not-registered',
-};
+export const alreadyRegisteredEmail = 'testing-emailg@email.test';
+export const notRegisteredEmail = 'not-registeredg@email.test';
 export const valid = {
 	email: 'er@er.er',
-	username: 'er',
+	firstName: 'er',
+	lastName: 'Re',
 	password: 'Er345678',
 };
-export const invalidEmail = 'a@d';
+export const validUid = 'AD57qweq21JG5dashHfda8752';

@@ -37,6 +37,13 @@
 		"react/prefer-stateless-function": "off",
 		"react/prop-types": "off",
 		"no-throw-literal": "off",
-		"@typescript-eslint/no-unused-vars": "error"
+		"@typescript-eslint/no-unused-vars": "error",
+		"jsx-a11y/label-has-associated-control": [ 2, {
+			"labelComponents": ["CustomInputLabel"],
+			"labelAttributes": ["label"],
+			"controlComponents": ["CustomInput"],
+			"depth": 3
+		}],
+		"react/jsx-props-no-spreading": "off"
 	}
 }

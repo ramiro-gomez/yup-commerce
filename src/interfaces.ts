@@ -1,5 +1,5 @@
 export interface YupUser {
-	username: string
+	displayName: string
 }
 
 export interface Product {

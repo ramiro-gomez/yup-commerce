@@ -8,7 +8,7 @@ import ProductPage from './views/ProductPage';
 import SignUpPage from './views/SignUpPage';
 import SignInPage from './views/SignInPage';
 import CartPage from './views/CartPage';
-import { auth, getAssociatedUsername } from './firebase/handler';
+import { auth, getUserData } from './firebase/handler';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setUser } from './store/reducers/userReducer';
 
@@ -20,9 +20,9 @@ const App = () => {
 	useEffect(() => {
 		const unsuscribeAuthListener = onAuthStateChanged(auth, async (userAuth) => {
 			if (userAuth) {
-				const username = await getAssociatedUsername(userAuth.uid);
+				const { firstName, lastName } = await getUserData(userAuth.uid);
 				dispatch(setUser({
-					username,
+					displayName: `${firstName} ${lastName}`,
 				}));
 			}
 			setLoadingUser(false);
@@ -34,7 +34,7 @@ const App = () => {
 		<HashRouter>
 			{loadingUser ? (
 				<div className="d-flex align-items-center justify-content-center position-absolute top-0 start-0 bottom-0 end-0">
-					<Spinner className="text-primary p-4 p-lg-5" animation="border" role="status">
+					<Spinner className="spinner-size text-primary" animation="border" role="status">
 						<span className="visually-hidden">Loading...</span>
 					</Spinner>
 				</div>

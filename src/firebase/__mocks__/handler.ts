@@ -1,10 +1,11 @@
 import {
 	products,
-	alreadyRegistered,
-	notRegistered,
+	alreadyRegisteredEmail,
+	notRegisteredEmail,
 	invalidEmail,
 	userData,
 	valid,
+	validUid,
 } from './mockData';
 
 const throwFirebaseException = (code: string) => {
@@ -15,13 +16,8 @@ const throwFirebaseException = (code: string) => {
 
 export const getProducts = () => Promise.resolve(products);
 
-export const getUserDataUsingUsername = (username: string) => {
-	if (username === alreadyRegistered.username) return Promise.resolve(userData);
-	return Promise.resolve();
-};
-
 export const signUpUser = (email: string) => {
-	if (email === alreadyRegistered.email) {
+	if (email === alreadyRegisteredEmail) {
 		throwFirebaseException('auth/email-already-in-use');
 	}
 	return Promise.resolve();
@@ -29,7 +25,7 @@ export const signUpUser = (email: string) => {
 
 export const signInUser = (email: string, password: string) => {
 	const mailExceptions = {
-		[notRegistered.email]: 'auth/user-not-found',
+		[notRegisteredEmail]: 'auth/user-not-found',
 		[invalidEmail]: 'auth/invalid-email',
 	};
 	if (mailExceptions[email]) {
@@ -39,4 +35,9 @@ export const signInUser = (email: string, password: string) => {
 		return Promise.resolve();
 	}
 	return throwFirebaseException('auth/wrong-password');
+};
+
+export const getUserData = (uid: string) => {
+	if (uid === validUid) return Promise.resolve(userData);
+	return Promise.resolve();
 };

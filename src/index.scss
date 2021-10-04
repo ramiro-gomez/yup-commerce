@@ -54,6 +54,9 @@ $input-btn-padding-y: 0.5rem;
 $input-btn-padding-x: 1rem;
 $input-btn-focus-box-shadow: $shadow-sm;
 
+$tooltip-font-size: $fs-3;
+$tooltip-bg: $primary;
+
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -226,8 +229,12 @@ input:focus {
 .card-quantity-box {
 	width: 2rem;
 }
-.sign-form {
+.form-size {
 	max-width: 32rem;
+}
+.spinner-size {
+	width: 3rem;
+	height: 3rem;
 }
 
 @include media-breakpoint-up(lg) {
@@ -251,5 +258,9 @@ input:focus {
 	}
 	.sign-logo {
 		height: 3.75rem;
+	}
+	.spinner-size {
+		width: 5rem;
+		height: 5rem;
 	}
 }

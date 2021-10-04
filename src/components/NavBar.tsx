@@ -1,7 +1,9 @@
 import { signOut } from '@firebase/auth';
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
-import { Button, Nav, Navbar } from 'react-bootstrap';
+import {
+	Button, Nav, Navbar, OverlayTrigger, Tooltip,
+} from 'react-bootstrap';
 import { HashRouter, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import { auth } from '../firebase/handler';
@@ -47,9 +49,18 @@ const NavBar: FC = () => {
 						<Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-2" />
 						<Navbar.Collapse id="basic-navbar-nav" className="ms-2 flex-grow-0">
 							<Nav className="py-3 py-lg-0 d-grid align-items-center gap-3 auto-flow-lg-column">
-								<div className="profile-icon d-flex justify-content-center align-items-center bg-primary mx-auto rounded-circle">
-									<h2 className="text-white fm-header fs-3 fs-lg-2">U</h2>
-								</div>
+								<OverlayTrigger
+									placement="bottom"
+									overlay={(
+										<Tooltip color="red">
+											{user.displayName}
+										</Tooltip>
+									)}
+								>
+									<div className="profile-icon d-flex justify-content-center align-items-center bg-primary mx-auto rounded-circle">
+										<h2 className="text-white fm-header fs-3 fs-lg-2">{user.displayName[0].toUpperCase()}</h2>
+									</div>
+								</OverlayTrigger>
 								<Button variant="outline-primary" disabled={disableSignOutBtn} onClick={signOutUser}>Sign out</Button>
 							</Nav>
 						</Navbar.Collapse>

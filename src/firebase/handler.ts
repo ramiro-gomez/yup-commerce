@@ -1,5 +1,5 @@
 import {
-	collection, doc, getDoc, getDocs, query, setDoc, where,
+	collection, doc, getDoc, getDocs, setDoc,
 } from '@firebase/firestore';
 import {
 	getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -23,34 +23,22 @@ export const getProducts = async () => {
 	return [];
 };
 
-export const getUserDataUsingUsername = async (username: string) => {
-	const usersRef = collection(db, 'users');
-	const usernameQuery = query(usersRef, where('username', '==', username));
-	const userSnaps = await getDocs(usernameQuery);
-	if (userSnaps.docs[0]) {
-		return userSnaps.docs[0].data();
-	}
-	throw {
-		code: 'yup-auth/username-not-found',
-	};
-};
-
-export const getAssociatedUsername = async (uid: string) => {
-	const userSnap = await getDoc(doc(db, 'users', uid));
-	if (userSnap.exists()) {
-		const user = userSnap.data();
-		return user.username;
-	}
-	return '';
-};
-
-export const signUpUser = async (email: string, username: string, password: string) => {
+export const signUpUser = async (
+	email: string, firstName: string, lastName: string, password: string,
+) => {
 	const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 	await setDoc(doc(db, 'users', userCredential.user.uid), {
-		username,
+		firstName,
+		lastName,
 	});
 };
-
 export const signInUser = async (email:string, password: string) => {
 	await signInWithEmailAndPassword(auth, email, password);
+};
+export const getUserData = async (uid: string) => {
+	const userSnap = await getDoc(doc(db, 'users', uid));
+	if (!userSnap.exists()) {
+		throw new Error('User data does not exist');
+	}
+	return userSnap.data() as { firstName: string, lastName: string };
 };

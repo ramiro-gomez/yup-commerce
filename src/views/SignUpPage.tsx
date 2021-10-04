@@ -1,67 +1,108 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { Formik, FormikHelpers } from 'formik';
 import { Form, Button } from 'react-bootstrap';
 import { HashRouter, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
-import { getUserDataUsingUsername, signUpUser } from '../firebase/handler';
+import { signUpUser } from '../firebase/handler';
 
-interface AlreadyRegistered {
-	email: string | null,
-	username: string | null
+interface Fields {
+	email: string,
+	firstName: string,
+	lastName: string,
+	password: string,
+	repeatPassword: string
 }
 
 const SignUpPage = () => {
-	const [signupForm, setSignupForm] = useState({
+	const initialValues: Fields = {
 		email: '',
-		username: '',
+		firstName: '',
+		lastName: '',
 		password: '',
-	});
-	const [alreadyRegistered, setAlreadyRegistered] = useState<AlreadyRegistered>({
-		email: null,
-		username: null,
-	});
-	const [showInvalidFields, setShowInvalidFields] = useState(false);
-	const [disableSubmitButton, setDisableSubmitButton] = useState(false);
-
-	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setSignupForm({
-			...signupForm,
-			[e.target.name]: e.target.value,
-		});
+		repeatPassword: '',
 	};
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const form = e.currentTarget;
-		if (!form.checkValidity()) {
-			setShowInvalidFields(true);
-			return;
+
+	const validate = ({
+		email, firstName, lastName, password, repeatPassword,
+	}: Fields) => {
+		let errors = {};
+		if (!email) {
+			errors = {
+				...errors,
+				email: '*You must enter an email',
+			};
+		} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) { // Same regex used by firebase auth
+			errors = {
+				...errors,
+				email: '*Enter a valid email adress',
+			};
 		}
-		setDisableSubmitButton(true);
-		const { email, username, password } = signupForm;
+		if (!firstName) {
+			errors = {
+				...errors,
+				firstName: '*You must enter a first name',
+			};
+		} else if (!/^[a-zA-Z]+$/.test(firstName)) {
+			errors = {
+				...errors,
+				firstName: '*First name can only contain letters',
+			};
+		}
+		if (!lastName) {
+			errors = {
+				...errors,
+				lastName: '*You must enter a last name',
+			};
+		} else if (!/^[a-zA-Z]+$/.test(lastName)) {
+			errors = {
+				...errors,
+				lastName: '*Last name can only contain letters',
+			};
+		}
+		if (!password) {
+			errors = {
+				...errors,
+				password: '*You must enter a password',
+			};
+		} else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+			errors = {
+				...errors,
+				password: '*Must contain at least 8 characters, numbers, lowercase and uppercase letters',
+			};
+		}
+		if (!repeatPassword) {
+			errors = {
+				...errors,
+				repeatPassword: '*You must repeat your password',
+			};
+		} else if (repeatPassword !== password) {
+			errors = {
+				...errors,
+				repeatPassword: '*The passwords don\'t match',
+			};
+		}
+		return errors;
+	};
+
+	const handleSignUp = async ({
+		email, firstName, lastName, password,
+	}: Fields, { setSubmitting, setFieldError }: FormikHelpers<Fields>) => {
 		try {
-			const usernameExists = await getUserDataUsingUsername(username);
-			if (usernameExists) {
-				setAlreadyRegistered({
-					...alreadyRegistered,
-					username,
-				});
-				setShowInvalidFields(true);
-			} else {
-				await signUpUser(email, username, password);
-			}
+			await signUpUser(email, firstName, lastName, password);
 		} catch (error: any) {
-			if (error.code === 'auth/email-already-in-use') {
-				setAlreadyRegistered({
-					...alreadyRegistered,
-					email,
-				});
-				setShowInvalidFields(true);
-			} else {
-				console.log(error);
+			switch (error.code) {
+				case 'auth/email-already-in-use':
+					setFieldError('email', '*This email has already been registered');
+					break;
+				case 'auth/invalid-email':
+					setFieldError('email', '*Enter a valid email adress');
+					break;
+				default:
+					console.log(error);
+					break;
 			}
+			setSubmitting(false);
 		}
-		setDisableSubmitButton(false);
 	};
-
 	return (
 		<>
 			<HashRouter>
@@ -70,60 +111,97 @@ const SignUpPage = () => {
 				</Link>
 			</HashRouter>
 			<div className="custom-container">
-				<Form className="sign-form mx-auto p-4 rounded-2 shadow-lg" noValidate validated={showInvalidFields} onSubmit={handleSubmit}>
-					<Form.Group className="mb-3" controlId="emailInput">
-						<Form.Label className="fw-semibold fs-lg-2">Email</Form.Label>
-						<Form.Control
-							className="border-gray-40 fs-lg-2"
-							type="email"
-							name="email"
-							placeholder="Enter your email"
-							onChange={handleInputChange}
-							value={signupForm.email}
-							pattern={alreadyRegistered.email ? `^(?!${alreadyRegistered.email}$)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$` // Must be a valid email and not a registered email
-								: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$'} // Must be a valid email (This regex is also used by firebase auth)
-							required
-						/>
-						<Form.Control.Feedback type="invalid">
-							{signupForm.email === alreadyRegistered.email ? '*This email has already been registered' : '*Enter a valid email adress'}
-						</Form.Control.Feedback>
-					</Form.Group>
-					<Form.Group className="mb-3" controlId="usernameInput">
-						<Form.Label className="fw-semibold fs-lg-2">Username</Form.Label>
-						<Form.Control
-							className="border-gray-40 fs-lg-2"
-							type="text"
-							name="username"
-							placeholder="Choose your username"
-							onChange={handleInputChange}
-							maxLength={20}
-							pattern={alreadyRegistered.username ? `^(?!${alreadyRegistered.username}$)[a-zA-Z][0-9a-zA-Z_.-]+$` // Must be a valid username and not a registered username
-								: '^[a-zA-Z][0-9a-zA-Z_.-]+$'} // Must be a valid username, requeriments in the following Control.Feedback
-							value={signupForm.username}
-							required
-						/>
-						<Form.Control.Feedback type="invalid">
-							{signupForm.username === alreadyRegistered.username ? '*Sorry, this username has already been taken' : '*Username must start with a letter and can only contain numbers, letters, periods, hyphens and underscores'}
-						</Form.Control.Feedback>
-					</Form.Group>
-					<Form.Group className="mb-4" controlId="passwordInput">
-						<Form.Label className="fw-semibold fs-lg-2">Password</Form.Label>
-						<Form.Control
-							className="border-gray-40 fs-lg-2 mb-1"
-							type="password"
-							name="password"
-							placeholder="Choose your password"
-							onChange={handleInputChange}
-							value={signupForm.password}
-							pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$" // Requeriments in the following Control.Feedback
-							required
-						/>
-						<Form.Control.Feedback type="invalid">
-							*Must contain at least 8 characters, numbers, lowercase and uppercase letters
-						</Form.Control.Feedback>
-					</Form.Group>
-					<Button className="w-100 fs-3" disabled={disableSubmitButton} variant="primary" type="submit">Sign up</Button>
-				</Form>
+
+				<Formik
+					initialValues={initialValues}
+					validate={validate}
+					onSubmit={handleSignUp}
+				>
+					{({
+						handleSubmit, getFieldProps, errors, isSubmitting, touched,
+					}) => (
+						<Form className="form-size mx-auto p-4 rounded-2 shadow-lg" noValidate onSubmit={handleSubmit}>
+							<Form.Group className="mb-3" controlId="email">
+								<Form.Label className="fw-semibold fs-lg-2">Email</Form.Label>
+								<Form.Control
+									className="border-gray-40 fs-lg-2"
+									placeholder="Enter your email"
+									type="email"
+									{...getFieldProps('email')}
+									isValid={touched.email && !errors.email}
+									isInvalid={touched.email && !!errors.email}
+								/>
+								<Form.Control.Feedback type="invalid">
+									{errors.email}
+								</Form.Control.Feedback>
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="firstName">
+								<Form.Label className="fw-semibold fs-lg-2">First name</Form.Label>
+								<Form.Control
+									className="border-gray-40 fs-lg-2"
+									placeholder="Enter your first name"
+									type="firstName"
+									{...getFieldProps('firstName')}
+									isValid={touched.firstName && !errors.firstName}
+									isInvalid={touched.firstName && !!errors.firstName}
+								/>
+								<Form.Control.Feedback type="invalid">
+									{errors.firstName}
+								</Form.Control.Feedback>
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="lastName">
+								<Form.Label className="fw-semibold fs-lg-2">Last name</Form.Label>
+								<Form.Control
+									className="border-gray-40 fs-lg-2"
+									placeholder="Enter your last name"
+									type="lastName"
+									{...getFieldProps('lastName')}
+									isValid={touched.lastName && !errors.lastName}
+									isInvalid={touched.lastName && !!errors.lastName}
+								/>
+								<Form.Control.Feedback type="invalid">
+									{errors.lastName}
+								</Form.Control.Feedback>
+							</Form.Group>
+							<Form.Group className="mb-4" controlId="password">
+								<Form.Label className="fw-semibold fs-lg-2">Password</Form.Label>
+								<Form.Control
+									className="border-gray-40 fs-lg-2"
+									placeholder="Choose your password"
+									type="password"
+									{...getFieldProps('password')}
+									isValid={touched.password && !errors.password}
+									isInvalid={touched.password && !!errors.password}
+								/>
+								<Form.Control.Feedback type="invalid">
+									{errors.password}
+								</Form.Control.Feedback>
+							</Form.Group>
+							<Form.Group className="mb-4" controlId="repeatPassword">
+								<Form.Label className="fw-semibold fs-lg-2">Repeat your password</Form.Label>
+								<Form.Control
+									className="border-gray-40 fs-lg-2"
+									placeholder="Repeat your choseen password"
+									type="password"
+									{...getFieldProps('repeatPassword')}
+									isValid={touched.repeatPassword && !errors.repeatPassword}
+									isInvalid={touched.repeatPassword && !!errors.repeatPassword}
+								/>
+								<Form.Control.Feedback type="invalid">
+									{errors.repeatPassword}
+								</Form.Control.Feedback>
+							</Form.Group>
+							<Button
+								className="w-100 fs-3"
+								disabled={isSubmitting}
+								variant="primary"
+								type="submit"
+							>
+								Sign up
+							</Button>
+						</Form>
+					)}
+				</Formik>
 			</div>
 		</>
 	);

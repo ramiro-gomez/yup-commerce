@@ -7,7 +7,7 @@ describe('<NavBar />', () => {
 	beforeEach(() => {
 		render(
 			<Provider store={store}>
-				<NavBar currentUser={null} />
+				<NavBar />
 			</Provider>,
 		);
 	});
