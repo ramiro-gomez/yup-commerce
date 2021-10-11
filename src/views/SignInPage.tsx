@@ -75,7 +75,7 @@ const SignUpPage = () => {
 					{({
 						handleSubmit, getFieldProps, errors, isSubmitting, submitCount,
 					}) => (
-						<Form className="form-size mx-auto p-4 rounded-2 shadow-lg" noValidate onSubmit={handleSubmit}>
+						<Form className="form-size mx-auto p-4 mb-5 rounded-2 shadow-lg" noValidate onSubmit={handleSubmit}>
 							<Form.Group className="mb-3" controlId="email">
 								<Form.Label className="fw-semibold fs-lg-2">Email</Form.Label>
 								<Form.Control

@@ -19,9 +19,11 @@ const App = () => {
 
 	useEffect(() => {
 		const unsuscribeAuthListener = onAuthStateChanged(auth, async (userAuth) => {
-			if (userAuth) {
+			if (userAuth && userAuth.email) {
 				const { firstName, lastName } = await getUserData(userAuth.uid);
 				dispatch(setUser({
+					uid: userAuth.uid,
+					email: userAuth.email,
 					displayName: `${firstName} ${lastName}`,
 				}));
 			}

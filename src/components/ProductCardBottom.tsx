@@ -7,10 +7,10 @@ import CardQuantity from './CardQuantity';
 
 interface Props {
 	product: Product,
-	setShowAlert: (state: boolean) => void
+	showAlert: () => void
 }
 
-const ProductCardBottom: FC<Props> = ({ product, setShowAlert }) => {
+const ProductCardBottom: FC<Props> = ({ product, showAlert }) => {
 	const [quantity, setQuantity] = useState(1);
 	const user = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ const ProductCardBottom: FC<Props> = ({ product, setShowAlert }) => {
 		if (user) {
 			dispatch(addToCart({ product, quantity }));
 		} else {
-			setShowAlert(true);
+			showAlert();
 		}
 	};
 

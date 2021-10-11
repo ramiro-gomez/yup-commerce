@@ -1,18 +1,36 @@
 rules_version = '2';
 service cloud.firestore {
 	match /databases/{database}/documents {
+		function onlyContainsLetters(sentence) {
+			return sentence is string &&
+			sentence.matches('^[a-zA-Z]+$');
+		}
+		function matchProductRegex(sentence) {
+			return sentence is string &&
+			sentence.matches('^[a-zA-Z][a-zA-Z\\s-]*$'); // Starts with a letter and only contains spaces, leterrs or hyphen minus
+		}
 		match /users/{userId} {
 			function userDataIsValid() {
-				return request.auth.uid == userId &&
-				request.resource.data.firstName is string &&
-				request.resource.data.lastName is string &&
-				request.resource.data.size() == 2;
+				return request.resource.data.size() == 2 &&
+				request.auth.uid == userId &&
+				onlyContainsLetters(request.resource.data.firstName) &&
+				onlyContainsLetters(request.resource.data.lastName);
 			}
 			allow get: if request.auth.uid == userId;
 			allow create: if userDataIsValid();
 		}
 		match /products/{productId} {
+			function productDataIsValid() {
+				return request.resource.data.size() == 4 &&
+				matchProductRegex(request.resource.data.name) &&
+				matchProductRegex(request.resource.data.category) &&
+				request.resource.data.price is number &&
+				request.resource.data.price > 0 &&
+				request.resource.data.createdBy is string &&
+				request.resource.data.createdBy == request.auth.uid;
+			}
 			allow read;
+			allow create: if productDataIsValid();
 		}
 	}
 }

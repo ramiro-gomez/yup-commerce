@@ -1,4 +1,5 @@
 import {
+	addDoc,
 	collection, doc, getDoc, getDocs, setDoc,
 } from '@firebase/firestore';
 import {
@@ -12,16 +13,6 @@ import { Product } from '../interfaces';
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export const auth = getAuth();
-
-export const getProducts = async () => {
-	try {
-		const productSnaps = await getDocs(collection(db, 'products'));
-		return productSnaps.docs.map((productSnap) => productSnap.data() as Product);
-	} catch (error) {
-		console.log(error);
-	}
-	return [];
-};
 
 export const signUpUser = async (
 	email: string, firstName: string, lastName: string, password: string,
@@ -41,4 +32,24 @@ export const getUserData = async (uid: string) => {
 		throw new Error('User data does not exist');
 	}
 	return userSnap.data() as { firstName: string, lastName: string };
+};
+
+const productsCollection = collection(db, 'products');
+export const getProducts = async () => {
+	const productSnaps = await getDocs(productsCollection);
+	return productSnaps.docs.map((productSnap) => ({
+		...productSnap.data(),
+		id: productSnap.id,
+	}) as Product);
+};
+export const createProduct = async (
+	name: string, category: string, price: number, createdBy: string,
+) => {
+	const productRef = await addDoc(productsCollection, {
+		name,
+		category,
+		price,
+		createdBy,
+	});
+	return productRef;
 };

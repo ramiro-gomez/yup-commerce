@@ -31,6 +31,7 @@ $font-sizes: (
 );
 
 $shadow-nav: 0px 4px 12px hsla(253, 25%, 14%, 0.15);
+$shadow-footer: 0px -4px 12px hsla(253, 25%, 14%, 0.15);
 $shadow-lg: 0px 2px 8px hsla(253, 25%, 14%, 0.2);
 $shadow-md: 2px 2px 6px hsla(253, 25%, 14%, 0.25);
 $shadow-sm: 2px 2px 12px hsla(253, 25%, 14%, 0.12);
@@ -56,6 +57,8 @@ $input-btn-focus-box-shadow: $shadow-sm;
 
 $tooltip-font-size: $fs-3;
 $tooltip-bg: $primary;
+
+$border-radius-lg: 0.5rem;
 
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -165,6 +168,7 @@ $utilities: (
 		class: shadow,
 		values: (
 			nav: $shadow-nav,
+			footer: $shadow-footer,
 			lg: $shadow-lg,
 			md: $shadow-md,
 			sm: $shadow-sm,
@@ -230,7 +234,12 @@ input:focus {
 	width: 2rem;
 }
 .form-size {
+	width: 100%;
 	max-width: 32rem;
+}
+.btn-create-product {
+	margin-top: 120px;
+	z-index: 5;
 }
 .spinner-size {
 	width: 3rem;
