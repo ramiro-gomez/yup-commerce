@@ -1,30 +1,34 @@
 import { Formik, FormikHelpers } from 'formik';
 import { FC } from 'react';
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import { createProduct } from '../firebase/handler';
-import { addProduct } from '../store/reducers/productsReducer';
+import { Product } from '../interfaces';
+import { createProduct, updateProduct } from '../store/reducers/productsReducer';
 import { useAppDispatch, useAppSelector } from '../store/store';
 
-interface Fields {
+export enum ProductFormAction {
+	create,
+	edit
+}
+interface ProductFormFields {
 	productName: string,
 	category: string,
 	price: number
 }
-
 interface Props {
-	onProductSave: () => void,
+	action: ProductFormAction,
+	productToEdit: Product | null,
+	hideProductModal: () => void,
 }
-
-const ProductForm: FC<Props> = ({ onProductSave }) => {
-	const initialValues: Fields = {
-		productName: '',
-		category: '',
-		price: 0,
+const ProductForm: FC<Props> = ({ action, productToEdit, hideProductModal }) => {
+	const initialValues: ProductFormFields = {
+		productName: productToEdit?.name || '',
+		category: productToEdit?.category || '',
+		price: productToEdit?.price || 0,
 	};
 	const user = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
-	const validate = ({ productName, category, price }: Fields) => {
+	const validate = ({ productName, category, price }: ProductFormFields) => {
 		let errors = {};
 		if (!productName) {
 			errors = {
@@ -73,19 +77,26 @@ const ProductForm: FC<Props> = ({ onProductSave }) => {
 	};
 	const handleSaveProduct = async ({
 		productName, category, price,
-	}: Fields, { setSubmitting }: FormikHelpers<Fields>) => {
+	}: ProductFormFields, { setSubmitting }: FormikHelpers<ProductFormFields>) => {
 		if (user) {
-			const createdBy = user.uid;
-			const { id } = await createProduct(productName, category, price, createdBy);
-			dispatch(addProduct({
-				id,
-				name: productName,
-				category,
-				price,
-				createdBy,
-			}));
+			if (action === ProductFormAction.create) {
+				const createdBy = user.uid;
+				await dispatch(createProduct({
+					name: productName,
+					category,
+					price,
+					createdBy,
+				}));
+			} else if (action === ProductFormAction.edit && productToEdit) {
+				await dispatch(updateProduct({
+					...productToEdit,
+					name: productName,
+					category,
+					price,
+				}));
+			}
 			setSubmitting(false);
-			onProductSave();
+			hideProductModal();
 		}
 	};
 

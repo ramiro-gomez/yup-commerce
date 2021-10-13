@@ -4,10 +4,17 @@ import { Product } from '../interfaces';
 
 interface Props {
 	product: Product,
+	cardTop?: ReactNode,
 	cardBottom: ReactNode
 }
-const ProductCard: FC<Props> = ({ product: { name, price, category }, cardBottom }) => (
+const defaultProps = {
+	cardTop: <></>,
+};
+const ProductCard: FC<Props> = ({
+	product: { name, price, category }, cardTop, cardBottom,
+}) => (
 	<Card className="shadow-md border-0">
+		{cardTop}
 		<Card.Body className="d-flex flex-column py-lg-4">
 			<div className="w-100 mb-3 mb-lg-4">
 				<div className="d-flex flex-wrap mb-2">
@@ -23,5 +30,6 @@ const ProductCard: FC<Props> = ({ product: { name, price, category }, cardBottom
 		</Card.Body>
 	</Card>
 );
+ProductCard.defaultProps = defaultProps;
 
 export default ProductCard;

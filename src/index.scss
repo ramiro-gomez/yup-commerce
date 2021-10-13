@@ -215,6 +215,30 @@ input:focus {
 		color: $white;
 	}
 }
+.btn-create-product {
+	margin-top: 120px;
+	z-index: 5;
+}
+.corner-btn-edit,
+.corner-btn-delete {
+	padding: 0 0.25rem;
+	background-color: transparent;
+	border: 1px solid $gray-40;
+	border-top: 0;
+	color: $gray-40;
+	&:hover {
+		border-color: $primary;
+		color: $primary;
+	}
+}
+.corner-btn-edit {
+	border-left: 0;
+	border-bottom-right-radius: 50%;
+}
+.corner-btn-delete {
+	border-right: 0;
+	border-bottom-left-radius: 50%;
+}
 
 .nav-logo {
 	height: 2.25rem;
@@ -236,10 +260,6 @@ input:focus {
 .form-size {
 	width: 100%;
 	max-width: 32rem;
-}
-.btn-create-product {
-	margin-top: 120px;
-	z-index: 5;
 }
 .spinner-size {
 	width: 3rem;

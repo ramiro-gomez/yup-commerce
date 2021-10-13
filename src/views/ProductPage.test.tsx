@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import ProductPage from './ProductPage';
 import { products } from '../firebase/__mocks__/mockData';
-import { getProducts } from '../firebase/handler';
+import { fetchFSProducts } from '../firebase/handler';
 import store from '../store/store';
 
 describe('<ProductPage />', () => {
@@ -13,7 +13,7 @@ describe('<ProductPage />', () => {
 				<ProductPage />
 			</Provider>,
 		);
-		await waitFor(() => getProducts());
+		await waitFor(() => fetchFSProducts());
 	});
 	it('renders product cards', async () => {
 		products.forEach(({ name, category, price }) => {

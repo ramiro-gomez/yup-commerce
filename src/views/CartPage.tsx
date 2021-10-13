@@ -30,6 +30,19 @@ const CartPage: FC = () => {
 
 	return (
 		<>
+			<Modal show={showModal} onHide={handleClose} centered>
+				<Modal.Header closeButton>
+					<Modal.Title>Purchase completed</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>Your purchase has been made successfully!</Modal.Body>
+				<Modal.Footer>
+					<Link to="/">
+						<Button variant="primary" onClick={handleClose}>
+							Continue shopping
+						</Button>
+					</Link>
+				</Modal.Footer>
+			</Modal>
 			<div className="sticky-top">
 				<NavBar />
 				{showAlert && <Alert variant="danger" className="mb-0">You have no products in your shopping cart</Alert>}
@@ -67,20 +80,6 @@ const CartPage: FC = () => {
 					</Col>
 				</Row>
 			</div>
-
-			<Modal show={showModal} onHide={handleClose}>
-				<Modal.Header closeButton>
-					<Modal.Title>Purchase completed</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>Your purchase has been made successfully!</Modal.Body>
-				<Modal.Footer>
-					<Link to="/">
-						<Button variant="primary" onClick={handleClose}>
-							Continue shopping
-						</Button>
-					</Link>
-				</Modal.Footer>
-			</Modal>
 		</>
 	);
 };

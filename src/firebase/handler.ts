@@ -1,6 +1,5 @@
 import {
-	addDoc,
-	collection, doc, getDoc, getDocs, setDoc,
+	addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc,
 } from '@firebase/firestore';
 import {
 	getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -8,7 +7,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from './config';
-import { Product } from '../interfaces';
+import { Product, ProductPrototype } from '../interfaces';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -35,21 +34,24 @@ export const getUserData = async (uid: string) => {
 };
 
 const productsCollection = collection(db, 'products');
-export const getProducts = async () => {
+export const fetchFSProducts = async () => {
 	const productSnaps = await getDocs(productsCollection);
 	return productSnaps.docs.map((productSnap) => ({
 		...productSnap.data(),
 		id: productSnap.id,
 	}) as Product);
 };
-export const createProduct = async (
-	name: string, category: string, price: number, createdBy: string,
-) => {
-	const productRef = await addDoc(productsCollection, {
-		name,
-		category,
-		price,
-		createdBy,
-	});
+export const createFSProduct = async (product: ProductPrototype) => {
+	const productRef = await addDoc(productsCollection, product);
 	return productRef;
+};
+export const updateFSProduct = async (product: Product) => {
+	await updateDoc(doc(db, 'products', product.id), {
+		name: product.name,
+		category: product.category,
+		price: product.price,
+	});
+};
+export const deleteFSProduct = async (product: Product) => {
+	await deleteDoc(doc(db, 'products', product.id));
 };

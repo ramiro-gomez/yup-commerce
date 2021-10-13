@@ -11,6 +11,7 @@ import CartPage from './views/CartPage';
 import { auth, getUserData } from './firebase/handler';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setUser } from './store/reducers/userReducer';
+import { fetchProducts } from './store/reducers/productsReducer';
 
 const App = () => {
 	const [loadingUser, setLoadingUser] = useState(true);
@@ -18,6 +19,7 @@ const App = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
+		dispatch(fetchProducts());
 		const unsuscribeAuthListener = onAuthStateChanged(auth, async (userAuth) => {
 			if (userAuth && userAuth.email) {
 				const { firstName, lastName } = await getUserData(userAuth.uid);

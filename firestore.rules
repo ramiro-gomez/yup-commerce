@@ -21,16 +21,23 @@ service cloud.firestore {
 		}
 		match /products/{productId} {
 			function productDataIsValid() {
-				return request.resource.data.size() == 4 &&
-				matchProductRegex(request.resource.data.name) &&
+				return matchProductRegex(request.resource.data.name) &&
 				matchProductRegex(request.resource.data.category) &&
 				request.resource.data.price is number &&
-				request.resource.data.price > 0 &&
-				request.resource.data.createdBy is string &&
-				request.resource.data.createdBy == request.auth.uid;
+				request.resource.data.price > 0;
+			}
+			function isTheOwner() {
+				return resource.data.createdBy == request.auth.uid;
 			}
 			allow read;
-			allow create: if productDataIsValid();
+			allow create: if request.resource.data.size() == 4 &&
+				productDataIsValid() &&
+				request.resource.data.createdBy is string &&
+				request.resource.data.createdBy == request.auth.uid;
+			allow update: if isTheOwner() &&
+				request.resource.data.size() == 4 &&
+				productDataIsValid();
+			allow delete: if isTheOwner();
 		}
 	}
 }
